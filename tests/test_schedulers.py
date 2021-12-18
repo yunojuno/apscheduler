@@ -15,7 +15,9 @@ from apscheduler.enums import JobOutcome
 from apscheduler.events import (
     Event, JobAdded, ScheduleAdded, ScheduleRemoved, SchedulerStarted, SchedulerStopped, TaskAdded)
 from apscheduler.exceptions import JobLookupError
+from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.schedulers.async_ import AsyncScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.schedulers.sync import Scheduler
 from apscheduler.structures import Job, Task
 from apscheduler.triggers.date import DateTrigger
@@ -334,3 +336,9 @@ class TestSyncScheduler:
                 raise result.exception
             else:
                 assert result.outcome is JobOutcome.success
+
+def test_funsigs_error() -> None:
+    """Test for funcsigs version error on Python 3.10."""
+    scheduler = BlockingScheduler()
+    scheduler.add_jobstore(MemoryJobStore(), "default")
+    scheduler.scheduled_job("interval", 60)(lambda: None)
