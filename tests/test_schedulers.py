@@ -20,6 +20,7 @@ from apscheduler.jobstores.base import BaseJobStore, JobLookupError, Conflicting
 from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.schedulers import SchedulerAlreadyRunningError, SchedulerNotRunningError
 from apscheduler.schedulers.base import BaseScheduler, STATE_RUNNING, STATE_STOPPED
+from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.base import BaseTrigger
 from apscheduler.util import undefined
 
@@ -1057,3 +1058,10 @@ class TestQtScheduler(SchedulerImplementationTestBase):
         while queue.empty():
             QCoreApplication.processEvents()
         return queue.get_nowait()
+
+
+def test_funsigs_error() -> None:
+    """Test for funcsigs version error on Python 3.10."""
+    scheduler = BlockingScheduler()
+    scheduler.add_jobstore(MemoryJobStore(), "default")
+    scheduler.scheduled_job("interval", 60)(lambda: None)
