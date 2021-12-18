@@ -337,6 +337,7 @@ class TestSyncScheduler:
             else:
                 assert result.outcome is JobOutcome.success
 
+
 def test_funsigs_error() -> None:
     """Test for funcsigs version error on Python 3.10."""
     scheduler = BlockingScheduler()
